@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "981054926513",
+    "firebase_url": "https://chatapp-ec12b.firebaseio.com",
+    "project_id": "chatapp-ec12b",
+    "storage_bucket": "chatapp-ec12b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981054926513:android:66760f9fbe518883",
+        "android_client_info": {
+          "package_name": "labrat.com.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981054926513-qf2srqggb704d0f1akcv95799rr0k2hf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "labrat.com.chatapp",
+            "certificate_hash": "adf1030f969cbb8befebc76c525aaf45d6f29ce9"
+          }
+        },
+        {
+          "client_id": "981054926513-sjvtqk5sqd6mabmqjnmrk28utq99eng3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlCc3qBbG72UA9-O97CA2nLZNiPqgp0PA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981054926513-sjvtqk5sqd6mabmqjnmrk28utq99eng3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
