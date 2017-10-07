@@ -18,6 +18,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
 
@@ -28,6 +32,7 @@ public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Toolbar insToolbar;
     private ProgressDialog insProgressDialog;
+    private DatabaseReference insDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +72,7 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private void signup(String username, String email, String password){
+    private void signup(final String username, String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -77,18 +82,38 @@ public class SignUp extends AppCompatActivity {
                             insProgressDialog.hide();
                             Toast.makeText(SignUp.this, task.getException().toString(), Toast.LENGTH_LONG).show();
                         }else{
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             user.sendEmailVerification()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(SignUp.this, "Verification mail sent.", Toast.LENGTH_LONG).show();
-                                                insProgressDialog.dismiss();
-                                                Intent intent = new Intent(SignUp.this,login.class);
-                                                startActivity(intent);
-                                                finish();
+
+                                                String uid = user.getUid();
+                                                insDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                                                HashMap<String ,String> userDetails = new HashMap<String, String>();
+                                                userDetails.put("Name",username);
+                                                userDetails.put("Status","Hi there! I'm using Chatter");
+                                                userDetails.put("image","default");
+                                                userDetails.put("thumb_image","default");
+
+                                                insDatabaseReference.setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            insProgressDialog.dismiss();
+                                                            Toast.makeText(SignUp.this, "Verification mail sent.", Toast.LENGTH_LONG).show();
+                                                            Intent intent = new Intent(SignUp.this,login.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                        else {
+                                                            Toast.makeText(SignUp.this, task.getException().toString() , Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                });
+
                                             }
                                             else {
                                                 insProgressDialog.hide();

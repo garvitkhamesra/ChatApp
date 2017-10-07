@@ -1,6 +1,8 @@
 package labrat.com.chatapp;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,10 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Toolbar insToolbar;
+    private ViewPager insViewPager;
+    private SectionAdapter sectionAdapter;
+    private TabLayout insTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(insToolbar);
         getSupportActionBar().setTitle("Chatter");
 
+        insViewPager = (ViewPager) findViewById(R.id.tab_pager);
+        sectionAdapter = new SectionAdapter(getSupportFragmentManager());
+        insViewPager.setAdapter(sectionAdapter);
+
+        insTabLayout = (TabLayout) findViewById(R.id.main_tab);
+        insTabLayout.setupWithViewPager(insViewPager);
     }
 
     @Override
@@ -53,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()== R.id.main_logout){
             FirebaseAuth.getInstance().signOut();
             ChoiceIntent();
+        }
+        else if (item.getItemId() == R.id.main_accountSettings){
+            Intent intent = new Intent(MainActivity.this, Account_Settings.class);
+            startActivity(intent);
         }
         return true;
     }
