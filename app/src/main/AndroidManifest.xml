@@ -23,7 +23,9 @@
         <activity android:name=".SignUpChoice" />
         <activity android:name=".SignUp" />
         <activity android:name=".login" />
-        <activity android:name=".Account_Settings"></activity>
+        <activity android:name=".Account_Settings" />
+        <activity android:name=".StatusActivity" android:parentActivityName=".Account_Settings"></activity>
+
     </application>
 
 </manifest>
