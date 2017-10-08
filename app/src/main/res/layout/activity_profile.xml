@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/totalCount_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="labrat.com.chatapp.profileActivity">
+
+    <TextView
+        android:id="@+id/displayNameProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:text="Display Name"
+        android:textColor="#000"
+        android:textSize="24sp"
+        android:layout_below="@+id/displayImage_profile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp" />
+
+    <ImageView
+        android:id="@+id/displayImage_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="195dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ca" />
+
+    <TextView
+        android:id="@+id/status_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:text="Status"
+        android:textSize="18sp"
+        android:layout_alignTop="@+id/displayNameProfile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp" />
+
+    <TextView
+        android:id="@+id/totalCountProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/status_profile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="total Count" />
+
+    <Button
+        android:id="@+id/sendFriendRequest_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:fontFamily="casual"
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp"
+        android:text="Send Friend Request"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/DeclineRequestProfile"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/DeclineRequestProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/sendFriendRequest_profile"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/sendFriendRequest_profile"
+        android:layout_marginBottom="70dp"
+        android:background="@color/colorAccent"
+        android:fontFamily="casual"
+        android:text="Decline Request" />
+</RelativeLayout>

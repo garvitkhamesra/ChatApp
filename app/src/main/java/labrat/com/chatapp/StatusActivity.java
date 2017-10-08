@@ -56,7 +56,7 @@ public class StatusActivity extends AppCompatActivity {
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
 
-                    insDatabaseReference.child("Status").setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    insDatabaseReference.child("status").setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){

@@ -70,13 +70,16 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Account_Settings.class);
             startActivity(intent);
         }
+        else if (item.getItemId() == R.id.main_AllUsers){
+            Intent AllUsers = new Intent(MainActivity.this, AllUsers.class);
+            startActivity(AllUsers);
+        }
         return true;
     }
 
     private void ChoiceIntent(){
         Intent SignUpChoice = new Intent(MainActivity.this, SignUpChoice.class);
         startActivity(SignUpChoice);
-        finish();
     }
 
     @Override

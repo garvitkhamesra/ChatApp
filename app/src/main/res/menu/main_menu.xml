@@ -6,7 +6,8 @@
         android:id="@+id/main_accountSettings"
         android:title="Account Setting" />
 
-    <item android:title="All Users" />
+    <item android:title="All Users"
+          android:id="@+id/main_AllUsers"/>
 
     <item
         android:id="@+id/main_logout"

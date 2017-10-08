@@ -93,8 +93,8 @@ public class SignUp extends AppCompatActivity {
                                                 String uid = user.getUid();
                                                 insDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                                                 HashMap<String ,String> userDetails = new HashMap<String, String>();
-                                                userDetails.put("Name",username);
-                                                userDetails.put("Status","Hi there! I'm using Chatter");
+                                                userDetails.put("name",username);
+                                                userDetails.put("status","Hi there! I'm using Chatter");
                                                 userDetails.put("image","default");
                                                 userDetails.put("thumb_image","default");
 
