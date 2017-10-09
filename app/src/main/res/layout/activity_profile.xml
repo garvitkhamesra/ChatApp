@@ -21,7 +21,7 @@
 
     <ImageView
         android:id="@+id/displayImage_profile"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="195dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -37,15 +37,6 @@
         android:layout_alignTop="@+id/displayNameProfile"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp" />
-
-    <TextView
-        android:id="@+id/totalCountProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/status_profile"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:text="total Count" />
 
     <Button
         android:id="@+id/sendFriendRequest_profile"

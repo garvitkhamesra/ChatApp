@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -34,4 +35,15 @@
         android:fontFamily="casual"
         android:text="Status"
         android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/userOnlineIconProfile"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="21dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/on"
+        android:layout_alignTop="@+id/displayNameAllUsers"
+        android:layout_toEndOf="@+id/displayNameAllUsers"
+        android:layout_above="@+id/StatusAllUsers" />
 </RelativeLayout>

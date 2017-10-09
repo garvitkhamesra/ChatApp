@@ -11,6 +11,8 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager insViewPager;
     private SectionAdapter sectionAdapter;
     private TabLayout insTabLayout;
+    private DatabaseReference insUserRef;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +40,33 @@ public class MainActivity extends AppCompatActivity {
 
         insTabLayout = (TabLayout) findViewById(R.id.main_tab);
         insTabLayout.setupWithViewPager(insViewPager);
+
+        insUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser == null){
             ChoiceIntent();
         }
         else if (!firebaseUser.isEmailVerified()){
             ChoiceIntent();
         }
+        else{
+            insUserRef.child("online").setValue(true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        insUserRef.child("online").setValue(false);
+
     }
 
     @Override

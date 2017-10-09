@@ -22,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class profileActivity extends AppCompatActivity {
 
@@ -29,12 +31,13 @@ public class profileActivity extends AppCompatActivity {
     private ImageView insDisplayImageProfile;
     private TextView insStatusProfile,insFriendCount;
     private Button sendRequestProfile;
+    private Button decclinneFriendRequest;
     private DatabaseReference insDatabaseRef;
     private DatabaseReference friendRequestRef;
     private FirebaseUser firebaseUser;
     private String currentState ;
     private DatabaseReference friendsRef;
-
+    private DatabaseReference mainDataRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +51,13 @@ public class profileActivity extends AppCompatActivity {
         insStatusProfile = (TextView)findViewById(R.id.status_profile);
         insDisplayImageProfile = (ImageView) findViewById(R.id.displayImage_profile);
         sendRequestProfile = (Button) findViewById(R.id.sendFriendRequest_profile);
+        decclinneFriendRequest = (Button) findViewById(R.id.DeclineRequestProfile);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         currentState = "not_friends";
+
+        mainDataRef = FirebaseDatabase.getInstance().getReference();
+        decclinneFriendRequest.setVisibility(View.INVISIBLE);
+        decclinneFriendRequest.setEnabled(false);
 
         friendsRef = FirebaseDatabase.getInstance().getReference().child("Friends");
         friendRequestRef = FirebaseDatabase.getInstance().getReference().child("Friend_req");
@@ -74,13 +82,18 @@ public class profileActivity extends AppCompatActivity {
                             String req_type = dataSnapshot.child(user_id).child("request_type").getValue().toString();
                             if (req_type.equals("recieved")){
                                 currentState = "req_recieved";
+                                sendRequestProfile.setEnabled(true);
                                 sendRequestProfile.setText("Accept Friend Request");
-                                sendRequestProfile.setEnabled(true);
+
+                                decclinneFriendRequest.setVisibility(View.VISIBLE);
+                                decclinneFriendRequest.setEnabled(true);
                             }
-                            else if (req_type.equals("sent")){
+                            else if (req_type.equals("send")){
                                 currentState = "req_sent";
-                                sendRequestProfile.setText("Cancel Friend Request");
                                 sendRequestProfile.setEnabled(true);
+                                sendRequestProfile.setText("Cancel Friend Request");
+                                decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                decclinneFriendRequest.setEnabled(false);
                             }
                         }
                         else {
@@ -90,6 +103,8 @@ public class profileActivity extends AppCompatActivity {
                                     if (dataSnapshot.hasChild(user_id)){
                                         currentState = "friends";
                                         sendRequestProfile.setText("Unfriend This Person");
+                                        decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                        decclinneFriendRequest.setEnabled(false);
                                     }
                                 }
 
@@ -127,9 +142,12 @@ public class profileActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
+                                            sendRequestProfile.setEnabled(true);
                                             currentState ="req_sent";
                                             sendRequestProfile.setText("Cancel Friend Request");
                                             Toast.makeText(profileActivity.this,"Friend Request Sent",Toast.LENGTH_LONG).show();
+                                            decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                            decclinneFriendRequest.setEnabled(false);
                                         }
 
                                     }
@@ -151,6 +169,8 @@ public class profileActivity extends AppCompatActivity {
                                 friendRequestRef.child(user_id).child(firebaseUser.getUid()).removeValue();
                                 currentState = "not_friends";
                                 sendRequestProfile.setText("Send Friend Request");
+                                decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                decclinneFriendRequest.setEnabled(false);
                             }
                             else {
                                 Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
@@ -162,33 +182,59 @@ public class profileActivity extends AppCompatActivity {
 
                 if (currentState.equals("req_recieved") ){
                     final String CurrentDate = DateFormat.getDateInstance().format(new Date());
-                    friendsRef.child(firebaseUser.getUid()).child(user_id).setValue(CurrentDate)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    Map friendsMap = new HashMap<>();
+                    friendsMap.put("Friends/" + firebaseUser.getUid() + "/" + user_id + "/date",CurrentDate);
+                    friendsMap.put("Friends/" +  user_id  + "/" +firebaseUser.getUid()+ "/date",CurrentDate);
+
+                    friendsMap.put("Friend_req/" + firebaseUser.getUid() + "/" + user_id ,null);
+                    friendsMap.put("Friend_req/" + firebaseUser.getUid() + "/" + user_id ,null);
+
+                    mainDataRef.updateChildren(friendsMap).addOnCompleteListener(new OnCompleteListener() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                        public void onComplete(@NonNull Task task) {
                             if (task.isSuccessful()){
-                                friendsRef.child(user_id).child(firebaseUser.getUid()).setValue(CurrentDate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        friendRequestRef.child(firebaseUser.getUid()).child(user_id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
-                                                    friendRequestRef.child(user_id).child(firebaseUser.getUid()).removeValue();
-                                                    currentState = "friends";
-                                                    sendRequestProfile.setText("Unfriend This Person");
-                                                }
-                                                else {
-                                                    Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
-                                                }
-                                                sendRequestProfile.setEnabled(true);
-                                            }
-                                        });
-                                    }
-                                });
+                                sendRequestProfile.setEnabled(true);
+                                currentState = "friends";
+                                sendRequestProfile.setText("Unfriend This Person");
+                                decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                decclinneFriendRequest.setEnabled(false);
+                            }
+                            else {
+                                Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
                             }
                         }
                     });
+
+//                    friendsRef.child(firebaseUser.getUid()).child(user_id).setValue(CurrentDate)
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if (task.isSuccessful()){
+//                                friendsRef.child(user_id).child(firebaseUser.getUid()).setValue(CurrentDate).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        friendRequestRef.child(firebaseUser.getUid()).child(user_id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                if (task.isSuccessful()){
+//                                                    friendRequestRef.child(user_id).child(firebaseUser.getUid()).removeValue();
+//                                                    currentState = "friends";
+//                                                    sendRequestProfile.setText("Unfriend This Person");
+//                                                    decclinneFriendRequest.setVisibility(View.INVISIBLE);
+//                                                    decclinneFriendRequest.setEnabled(false);
+//                                                }
+//                                                else {
+//                                                    Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
+//                                                }
+//                                                sendRequestProfile.setEnabled(true);
+//                                            }
+//                                        });
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    });
                 }
 
                 if (currentState.equals("friends")){
@@ -206,6 +252,8 @@ public class profileActivity extends AppCompatActivity {
                                                         if (task.isSuccessful()){
                                                             currentState = "not_friends";
                                                             sendRequestProfile.setText("Send Friend Request");
+                                                            decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                                                            decclinneFriendRequest.setEnabled(false);
                                                         }
                                                         else {
                                                             Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
@@ -219,6 +267,28 @@ public class profileActivity extends AppCompatActivity {
                                 }
                             });
                 }
+            }
+        });
+
+        decclinneFriendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendRequestRef.child(firebaseUser.getUid()).child(user_id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            friendRequestRef.child(user_id).child(firebaseUser.getUid()).removeValue();
+                            currentState = "not_friends";
+                            sendRequestProfile.setText("Send Friend Request");
+                            decclinneFriendRequest.setVisibility(View.INVISIBLE);
+                            decclinneFriendRequest.setEnabled(false);
+                        }
+                        else {
+                            Toast.makeText(profileActivity.this,task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
+                        }
+                        sendRequestProfile.setEnabled(true);
+                    }
+                });
             }
         });
     }

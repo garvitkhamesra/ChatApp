@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".ChatApp">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +24,7 @@
         <activity android:name=".SignUpChoice" />
         <activity android:name=".SignUp" android:parentActivityName=".SignUpChoice" />
         <activity android:name=".login" android:parentActivityName=".SignUpChoice"/>
-        <activity android:name=".Account_Settings" />
+        <activity android:name=".Account_Settings"  />
         <activity
             android:name=".StatusActivity"
             android:parentActivityName=".Account_Settings" />

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -92,9 +94,20 @@ public class AllUsers extends AppCompatActivity {
             textView.setText(name);
         }
 
-        public void setImageValue(String imagevalue, Context context){
-            CircleImageView imageView = (CircleImageView) view.findViewById(R.id.imageAllUsers);
-            Picasso.with(context).load(imagevalue).placeholder(R.drawable.ca).into(imageView);
+        public void setImageValue(final String imagevalue, final Context context){
+            final CircleImageView imageView = (CircleImageView) view.findViewById(R.id.imageAllUsers);
+            Picasso.with(context).load(imagevalue).placeholder(R.drawable.ca).networkPolicy(NetworkPolicy.OFFLINE)
+                    .placeholder(R.drawable.ca).into(imageView, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+                    Picasso.with(context).load(imagevalue).placeholder(R.drawable.ca).into(imageView);
+                }
+            });
 
         }
 

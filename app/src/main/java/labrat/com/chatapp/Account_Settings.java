@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 
@@ -74,12 +76,22 @@ public class Account_Settings extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+                final String image = dataSnapshot.child("image").getValue().toString();
                 String status = dataSnapshot.child("status").getValue().toString();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
                 if (!image.equals("default")){
-                    Picasso.with(Account_Settings.this).load(image).placeholder(R.drawable.ca).into(insImage);
+                    Picasso.with(Account_Settings.this).load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.ca).into(insImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso.with(Account_Settings.this).load(image).placeholder(R.drawable.ca).into(insImage);
+                            }
+                    });
                 }
 
                 insName.setText(name);
